@@ -1,13 +1,13 @@
 `timescale 1ns / 1ps
 
 module board_top (
-    input        clk,
+    input  clk,rst,prog,start,
     input  [2:0] sw,       // SW2..SW0 = program select
     output [7:0] led,
     output       led_hlt, led_in,
     output [7:0] AN,       // digit enables, active low
     output [7:0] seg,      // segments a..g + dp, active low
-    output reg flag_zero,flag_carry,rst,prog,start
+    output flag_zero,flag_carry
 );
 
     wire       slow_pulse;
@@ -23,6 +23,7 @@ module board_top (
 
     clk_div DIV (
         .clk_in(clk),
+        .rst(rst),
         .clk_out(slow_pulse)
     );
 
@@ -46,7 +47,9 @@ module board_top (
         .hlt(hlt),
         .led_in(led_in),
         .pc_value(),
-        .instr_value()
+        .instr_value(),
+        .flag_zero(flag_zero),
+        .flag_carry(flag_carry)
     );
 
     assign led     = output_data;
